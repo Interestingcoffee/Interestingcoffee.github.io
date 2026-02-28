@@ -18,7 +18,6 @@ Unlike traditional wiki pages, this project focuses on interactive filtering, re
 ## Project Status
 
 Development has not yet started.  
-System architecture and technology stack have been defined.
 
 ---
 
