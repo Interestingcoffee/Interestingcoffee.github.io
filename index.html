@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helldivers Database</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- TOP NAVBAR -->
+    <div class="navbar-top">
+        <a href="#/home" class="brand">HELLDIVERS&nbsp;<span>DATABASE</span></a>
+        <div class="navbar-search">
+            <input id="globalSearch" type="text" placeholder="Search the database…" autocomplete="off">
+        </div>
+        <div class="navbar-tag">FOR SUPER EARTH</div>
+    </div>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar-wrapper" id="sidebarWrapper">
+            <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">❮</button>
+            <nav class="sidebar" id="sidebar"></nav>
+        </div>
+
+        <!-- MAIN CONTENT (rendered by app.js) -->
+        <main class="main-content">
+            <div class="page-wrapper" id="view"></div>
+        </main>
+
+    </div>
+
+    <!-- BOTTOM NAVBAR -->
+    <div class="navbar-bottom">
+        <span class="navbar-bottom-left">MANAGED DEMOCRACY</span>
+        <span class="navbar-bottom-right">v0.1</span>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,488 @@
+/* ============================================================
+   HELLDIVERS DATABASE — STYLE
+   Preserves the original gold/dark identity and extends it
+   for the single-page app components.
+   ============================================================ */
+
+:root {
+    --bg: #0b0f14;
+    --panel: #121821;
+    --panel-2: #151b24;
+    --border: #2a2f3a;
+    --accent: #d4af37;
+    --accent-dim: rgba(212,175,55,0.12);
+    --danger: #ff3b3b;
+    --good: #6bd47a;
+    --warn: #e8a13c;
+    --text: #e6e6e6;
+    --muted: #9aa3b0;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    /* Match the sidebar's typeface across the whole app (per request).
+       IBM Plex Mono is the sidebar/utility face; using it everywhere
+       gives the UI one consistent voice. The Compare page keeps the
+       same family too — it was already mono-heavy. */
+    font-family: "IBM Plex Mono", "Segoe UI", Arial, sans-serif;
+    color: var(--text);
+    background-color: var(--bg);
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* SHIP IMAGE + DOTS (your original background) */
+body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background:
+        /* dots */
+        radial-gradient(rgba(0,0,0,0.285) 1px, transparent 1px),
+        /* ship image */
+        url("images/Helldiver_ship.png");
+    background-size: 10px 10px, cover;
+    background-position: center, center;
+    background-repeat: repeat, no-repeat;
+    opacity: 0.30; pointer-events: none; z-index: -2;
+}
+body::after {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.1) 35%, rgba(0,0,0,0.75) 100%);
+    z-index: -1;
+}
+
+h1 {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 0;
+}
+
+/* ============================================================
+   NAVBARS
+   ============================================================ */
+.navbar-top, .navbar-bottom {
+    height: 60px; box-sizing: border-box;
+    position: fixed; left: 0; width: 100%; z-index: 1000;
+    display: flex; justify-content: space-between; align-items: center;
+    background-color: rgb(11,11,11);
+    background-image: repeating-linear-gradient(-45deg,
+        rgba(122,114,114,0.06) 0px, rgba(122,114,114,0.06) 5px,
+        transparent 7px, transparent 12px);
+    padding: 15px 30px;
+    font-family: "IBM Plex Mono", monospace;
+}
+.navbar-top { top: 0; }
+.navbar-bottom { bottom: 0; }
+
+.navbar-top::before, .navbar-bottom::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to top, rgba(0,0,0,0.573), rgba(0,0,0,0));
+}
+.navbar-top::after {
+    content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: .8;
+}
+.navbar-bottom::after {
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: .8;
+}
+
+.brand {
+    color: var(--accent); text-decoration: none; font-weight: 700;
+    letter-spacing: 3px; font-size: 18px; white-space: nowrap; z-index: 1;
+}
+.brand span { color: var(--text); font-weight: 400; }
+
+.navbar-search { flex: 1; display: flex; justify-content: center; z-index: 1; }
+.navbar-search input {
+    width: min(420px, 60vw);
+    background: rgba(0,0,0,.45);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 14px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    border-radius: 2px;
+}
+.navbar-search input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-dim); }
+.navbar-tag { color: var(--muted); font-size: 11px; letter-spacing: 2px; z-index: 1; white-space: nowrap; }
+
+.navbar-bottom-left { color: var(--muted); font-size: 11px; letter-spacing: 1px; z-index: 1; }
+.navbar-bottom-right { color: var(--accent); font-size: 11px; letter-spacing: 1px; z-index: 1; }
+
+/* ============================================================
+   LAYOUT / SIDEBAR
+   ============================================================ */
+.layout { display: flex; }
+
+.sidebar-wrapper {
+    position: fixed; top: 60px; bottom: 60px; left: 0;
+    width: 200px; transition: transform 0.3s ease; z-index: 900;
+}
+.sidebar-wrapper.collapsed { transform: translateX(-180px); }
+
+.sidebar {
+    width: 200px; height: calc(100vh - 120px);
+    background: rgb(11,15,20);
+    border-right: 3px solid var(--border);
+    padding-top: 20px;
+    font-family: "IBM Plex Mono", monospace;
+    position: relative; z-index: 1001;
+    overflow-y: auto;
+}
+
+.sidebar a, .dropbtn { transition: transform .2s ease, background-color .2s ease, color .2s ease; }
+.sidebar a {
+    display: block; color: rgba(255,255,255,0.751); text-decoration: none;
+    padding: 12px 20px; text-transform: uppercase; font-size: 15px; letter-spacing: 1px;
+}
+.sidebar a:hover, .dropbtn:hover { transform: translateY(-2px); background-color: var(--accent-dim); color: var(--accent); }
+.sidebar a.active { color: var(--accent); border-left: 3px solid var(--accent); padding-left: 17px; background: var(--accent-dim); }
+.nav-compare { color: var(--accent) !important; font-weight: 700; }
+
+.sidebar-toggle {
+    width: 20px; height: 60px; position: absolute; right: -20px; top: 50%;
+    transform: translateY(-50%);
+    background: var(--panel-2); border: 1px solid var(--border); border-left: none;
+    color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;
+    z-index: 1002;
+}
+
+/* DROPDOWNS */
+.dropbtn {
+    font-family: "IBM Plex Mono", monospace; display: block; width: 100%;
+    background: none; border: none; color: rgba(255,255,255,0.751);
+    text-align: left; padding: 12px 20px; text-transform: uppercase; font-size: 15px; cursor: pointer;
+}
+.dropdown-content {
+    max-height: 0; overflow: hidden; display: flex; flex-direction: column;
+    transition: max-height 0.25s ease; background: var(--panel-2);
+    border-left: 2px solid var(--accent); margin-bottom: 8px;
+}
+.dropdown-content a { padding: 10px 20px; font-size: 13px; color: #ccc; }
+.dropdown.open .dropdown-content { max-height: 300px; }
+.arrow { display: inline-block; margin-left: 5px; transition: transform 0.3s ease; }
+.dropdown.open .arrow { transform: rotate(180deg); }
+
+/* MAIN CONTENT */
+.main-content {
+    flex: 1; margin-top: 60px; margin-bottom: 60px; padding: 20px;
+    transition: margin-left 0.3s ease; min-height: calc(100vh - 120px);
+}
+.page-wrapper { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+body:not(.sidebar-collapsed) .main-content { margin-left: 230px; }
+body.sidebar-collapsed .main-content { margin-left: 60px; }
+
+/* ============================================================
+   PAGE HEADERS / TOOLBARS
+   ============================================================ */
+.page-head { margin-bottom: 24px; border-bottom: 2px solid var(--border); padding-bottom: 14px; }
+.page-head h1 { font-size: 34px; margin: 0; }
+.page-sub { color: var(--muted); margin: 8px 0 0; font-size: 14px; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 24px; }
+.tab-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.tab-row-slot { margin-bottom: 14px; }
+
+.slot-btn, .type-btn {
+    background: var(--panel); border: 1px solid var(--border); color: var(--text);
+    cursor: pointer; text-transform: uppercase; font-family: "IBM Plex Mono", monospace;
+    transition: 0.2s ease;
+}
+.slot-btn { padding: 13px 22px; font-size: 14px; }
+.type-btn { padding: 9px 15px; font-size: 12px; color: #ccc; background: #151821; }
+.slot-btn:hover, .slot-btn.active, .type-btn:hover, .type-btn.active {
+    border-color: var(--accent); color: var(--accent);
+}
+
+.search-inline input {
+    background: rgba(0,0,0,.4); border: 1px solid var(--border); color: var(--text);
+    padding: 10px 14px; font-family: "IBM Plex Mono", monospace; font-size: 13px;
+    min-width: 220px; border-radius: 2px;
+}
+.search-inline input:focus { outline: none; border-color: var(--accent); }
+
+.empty {
+    grid-column: 1 / -1; text-align: center; color: var(--muted);
+    padding: 50px 20px; border: 1px dashed var(--border); border-radius: 6px;
+    font-family: "IBM Plex Mono", monospace;
+}
+
+/* ============================================================
+   CARDS / GRID
+   ============================================================ */
+.card-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px; align-items: stretch;
+}
+.card {
+    background: rgba(18,24,33,0.92); border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden; transition: 0.2s ease; display: flex; flex-direction: column;
+}
+.card:hover, .card:focus { transform: translateY(-3px); border-color: var(--accent); outline: none; box-shadow: 0 6px 22px rgba(0,0,0,.4); }
+.card-art { background: #0c1118; border-bottom: 1px solid var(--border); }
+.card-art .ph-art { width: 100%; height: 130px; display: block; }
+.card-art.small { width: 90px; height: 90px; flex: none; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.card-art.small .ph-art { height: 90px; }
+/* when .ph-art is a real <img>, fill the box and crop instead of stretching */
+img.ph-art { object-fit: cover; }
+/* icon / figure art (armor, stratagems, enemies, missions, boosters):
+   fit the whole image inside the box instead of cropping it */
+img.ph-art.ph-contain { object-fit: contain; padding: 10px; box-sizing: border-box; background: #0c1118; }
+.card-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
+.card-body h4 { margin: 0 0 4px; color: var(--text); font-size: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.card-type { margin: 0 0 8px; color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-family: "IBM Plex Mono", monospace; }
+.card-desc { margin: 0 0 12px; color: #c4c9d2; font-size: 13px; line-height: 1.5; }
+
+.stats { display: grid; gap: 4px; font-family: "IBM Plex Mono", monospace; font-size: 12px; }
+.stat { display: flex; justify-content: space-between; gap: 10px; padding: 3px 0; border-bottom: 1px dotted rgba(255,255,255,.06); }
+.stat-k { color: var(--muted); }
+.stat-v { color: var(--text); text-align: right; }
+
+.tags { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.card-diffs { margin-top: auto; padding-top: 4px; display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted);
+    border: 1px solid var(--border); padding: 3px 7px; border-radius: 99px; font-family: "IBM Plex Mono", monospace; }
+
+/* penetration / level badge */
+.pen { font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 700;
+    padding: 2px 6px; border-radius: 3px; letter-spacing: .5px; text-transform: uppercase; }
+.pen-lo  { background: rgba(154,163,176,.15); color: var(--muted); }
+.pen-mid { background: rgba(232,161,60,.18); color: var(--warn); }
+.pen-hi  { background: rgba(212,175,55,.2); color: var(--accent); }
+/* "Anti-Tank I/II" sits above Heavy — give it the strongest (danger) tone */
+.pen-at  { background: rgba(255,59,59,.18); color: var(--danger); border: 1px solid rgba(255,59,59,.4); }
+
+/* difficulty badges (Trivial → Super Helldive), scaled cool→hot */
+.diff { font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 3px; text-transform: uppercase; letter-spacing: .5px; }
+.diff-1 { background: rgba(107,212,122,.15); color: var(--good); }
+.diff-2 { background: rgba(107,212,122,.2);  color: var(--good); }
+.diff-3 { background: rgba(212,175,55,.15);  color: var(--accent); }
+.diff-4 { background: rgba(212,175,55,.2);   color: var(--accent); }
+.diff-5 { background: rgba(232,161,60,.18);  color: var(--warn); }
+.diff-6 { background: rgba(232,161,60,.26);  color: var(--warn); }
+.diff-7 { background: rgba(255,59,59,.14);   color: var(--danger); }
+.diff-8 { background: rgba(255,59,59,.2);    color: var(--danger); }
+.diff-9 { background: rgba(255,59,59,.28);   color: var(--danger); }
+.diff-10 { background: var(--danger); color: #fff; }
+
+/* ============================================================
+   WEAPON CARD — FLOATING DETAIL PANEL
+   The card itself stays compact (name + level + description).
+   On hover/focus, JS positions a larger floating panel (#weaponPopover)
+   beside the card and slightly above it, with image, name, desc + stats.
+   ============================================================ */
+.card-weapon { cursor: pointer; }
+
+.card-hint {
+    display: block; margin-top: auto; padding-top: 10px;
+    font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--muted);
+}
+
+/* the floating panel (single shared element, moved around by JS) */
+.weapon-popover {
+    position: fixed;
+    width: 320px;
+    background: rgba(17,23,32,0.98);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    box-shadow: 0 18px 50px rgba(0,0,0,.6);
+    padding: 0 0 16px;
+    z-index: 1500;
+    pointer-events: none;            /* never blocks the card underneath */
+    opacity: 0;
+    transform: translateY(6px) scale(.98);
+    transition: opacity .16s ease, transform .16s ease;
+    overflow: hidden;
+}
+.weapon-popover.show { opacity: 1; transform: translateY(0) scale(1); }
+
+.weapon-popover .pop-art {
+    background: #0c1118; border-bottom: 1px solid var(--border);
+}
+.weapon-popover .pop-art .ph-art { width: 100%; height: 170px; display: block; }
+
+.weapon-popover .pop-body { padding: 14px 18px 0; }
+.weapon-popover .pop-name {
+    margin: 0 0 4px; color: var(--text); font-size: 20px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.weapon-popover .pop-type {
+    margin: 0 0 10px; color: var(--accent); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1px; font-family: "IBM Plex Mono", monospace;
+}
+.weapon-popover .pop-desc { margin: 0 0 14px; color: #c4c9d2; font-size: 13px; line-height: 1.55; }
+
+.weapon-popover .pop-detail-title {
+    font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 8px;
+    border-top: 1px solid var(--border); padding-top: 12px;
+}
+/* two-column stat layout inside the panel */
+.weapon-popover .stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px 18px;
+}
+
+/* threat tags */
+.threat { font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 3px; text-transform: uppercase; letter-spacing: .5px; }
+.threat-low { background: rgba(107,212,122,.15); color: var(--good); }
+.threat-medium { background: rgba(232,161,60,.18); color: var(--warn); }
+.threat-high { background: rgba(255,59,59,.16); color: var(--danger); }
+.threat-extreme { background: var(--danger); color: #fff; }
+
+/* enemy armor pips + parts */
+.armor-bar { display: flex; align-items: center; gap: 10px; font-family: "IBM Plex Mono", monospace; font-size: 12px; margin: 6px 0 10px; }
+.armor-pips { display: inline-flex; gap: 3px; }
+.pip { width: 12px; height: 8px; background: rgba(255,255,255,.08); border: 1px solid var(--border); display: inline-block; }
+.pip.on { background: var(--accent); border-color: var(--accent); }
+.parts { list-style: none; margin: 0; padding: 0; font-family: "IBM Plex Mono", monospace; font-size: 12px; }
+.parts li { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dotted rgba(255,255,255,.06); color: #c4c9d2; }
+.parts li em { color: var(--muted); font-style: normal; }
+.parts li.is-weak { color: var(--good); }
+.parts li.is-weak em { color: var(--good); }
+
+/* ============================================================
+   COMPARE PAGE
+   ============================================================ */
+.compare-controls { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+.field { display: flex; flex-direction: column; gap: 6px; font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.field select {
+    background: var(--panel); border: 1px solid var(--border); color: var(--text);
+    padding: 10px 12px; font-family: "IBM Plex Mono", monospace; font-size: 13px;
+    min-width: 220px; border-radius: 2px; cursor: pointer;
+}
+.field select:focus { outline: none; border-color: var(--accent); }
+
+.cmp-enemy-banner {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: rgba(18,24,33,0.9); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); border-radius: 8px; padding: 16px; margin-bottom: 28px;
+}
+.cmp-enemy-banner h2 { margin: 0 0 4px; color: var(--accent); font-size: 22px; display: flex; gap: 10px; align-items: center; }
+
+.cmp-h { color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-size: 16px;
+    font-family: "IBM Plex Mono", monospace; margin: 28px 0 14px; }
+.cmp-h-hint { color: var(--muted); font-size: 11px; letter-spacing: .5px; text-transform: none; margin-left: 6px; }
+.cmp-banner-diff { margin-top: 10px; }
+
+/* verdict chips (shared by rec cards) */
+.rec-verdict { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; letter-spacing: .5px; font-family: "IBM Plex Mono", monospace; }
+.v-excellent { background: rgba(107,212,122,.18); color: var(--good); }
+.v-good { background: rgba(212,175,55,.18); color: var(--accent); }
+.v-situational { background: rgba(232,161,60,.18); color: var(--warn); }
+.v-weak { background: rgba(255,59,59,.16); color: var(--danger); }
+
+/* unified recommendation card: same look across weapons / stratagems /
+   armor / boosters so nothing reads as "more important" by accident */
+.cmp-grid { margin-bottom: 8px; }
+.rec-note { margin: 0 0 12px; color: var(--muted); font-size: 12px; line-height: 1.5;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif; }
+.rec-bar { display: block; margin-top: auto; background: rgba(255,255,255,.07);
+    height: 8px; border-radius: 99px; overflow: hidden; }
+.rec-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--warn), var(--accent)); }
+
+/* ============================================================
+   HOME
+   ============================================================ */
+.home { max-width: 1000px; margin: 0 auto; padding: 30px 0 50px; font-family: "IBM Plex Mono", monospace; }
+.home-eyebrow { text-align: center; color: var(--muted); letter-spacing: 4px; font-size: 11px; margin-bottom: 14px; }
+.hero-title { font-size: 46px; color: var(--accent); text-transform: uppercase; text-align: center; margin: 0; }
+.hero-subtitle { color: #b8b8b8; text-align: center; font-size: 16px; line-height: 1.6; margin: 14px auto 36px; max-width: 680px;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif; }
+
+/* "work in progress" disclaimer — plain text, no card */
+.home-wip-title {
+    text-align: center; color: var(--accent); font-weight: 700;
+    margin: 0 auto 6px; max-width: 760px;
+    font-family: "IBM Plex Mono", monospace;
+}
+.home-wip-text {
+    text-align: center; color: #d0d0d0; font-size: 14px; line-height: 1.6;
+    margin: 0 auto 36px; max-width: 760px;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+/* live data counts */
+.home-stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-bottom: 44px; }
+.home-stat {
+    flex: 1 1 120px; min-width: 110px; text-align: center;
+    background: rgba(18,24,33,0.6); border: 1px solid var(--border); border-radius: 6px; padding: 16px 12px;
+}
+.home-stat-n { display: block; color: var(--accent); font-size: 28px; font-weight: 700; line-height: 1; }
+.home-stat-l { display: block; color: var(--muted); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
+
+.home-section-h { color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-size: 15px; margin: 0 0 16px; }
+.home-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.home-link {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(16,16,16,0.85); border: 1px solid var(--border); border-radius: 6px;
+    padding: 16px 18px; text-decoration: none; color: var(--text); font-size: 14px;
+    text-transform: uppercase; letter-spacing: 1px; transition: 0.2s ease;
+}
+.home-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); }
+.home-link-go { color: var(--accent); font-weight: 700; }
+
+/* ============================================================
+   GLOBAL SEARCH RESULTS
+   ============================================================ */
+.search-results { display: flex; flex-direction: column; gap: 8px; }
+.sr-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(18,24,33,0.7); border: 1px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; text-decoration: none; transition: .2s ease; font-family: "IBM Plex Mono", monospace;
+}
+.sr-row:hover { border-color: var(--accent); transform: translateX(4px); }
+.sr-name { color: var(--text); font-size: 15px; }
+.sr-kind { color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 820px) {
+    .navbar-search { display: none; }
+    .home-links { grid-template-columns: 1fr 1fr; }
+    body:not(.sidebar-collapsed) .main-content { margin-left: 60px; }
+    .hero-title { font-size: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+}
+
+/* ============================================================
+   v0.2 ADDITIONS
+   - shared hover panel now used by every card type
+   - multi-tier level badges need a little breathing room
+   - enemy popovers include a body-parts list
+   - keep IBM Plex Mono readable at body sizes
+   ============================================================ */
+
+/* descriptions read cleaner in a proportional sans (Inter) than in mono */
+.card-desc, .pop-desc { line-height: 1.6; font-family: "Inter", "Segoe UI", Arial, sans-serif; letter-spacing: .1px; }
+
+/* allow several level/pen badges to sit beside a name without crowding */
+.card-body h4 .pen, .pop-name .pen { margin: 1px 0; }
+
+/* the panel sizes to its content. it only scrolls as a last resort when the
+   content is taller than the viewport itself. */
+.weapon-popover { height: auto; max-height: calc(100vh - 24px); overflow-y: auto; }
+.weapon-popover .pop-detail-title:not(:first-of-type) { margin-top: 14px; }
+
+/* parts list inside the popover (enemies) */
+.weapon-popover .parts { margin-top: 4px; }
+
+/* every interactive card shows it can be hovered */
+.card-pop { cursor: pointer; }
+
+/* on touch devices the hint reads "tap" better, but keep it simple */
+@media (hover: none) {
+    .card-hint::after { content: " · tap"; }
+}
